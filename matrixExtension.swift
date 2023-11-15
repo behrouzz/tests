@@ -1,19 +1,6 @@
-// Convert between JSON and Swift names
-
 import Cocoa
-/*
-extension Array<Double> {
-    func mul(_ secondArray: Array<Double>) -> Double {
-        var n = 0.0
-        for i in self.indices {
-            n += self[i] * secondArray[i]
-        }
-        return n
-    }
-}
-*/
 
-
+// dot produc of two vectors
 extension Array<Double> {
     static func *(lhs: Array<Double>, rhs: Array<Double>) -> Double {
         var n = 0.0
@@ -24,7 +11,7 @@ extension Array<Double> {
     }
 }
 
-
+// Trabspose of a matrix
 extension Array<[Double]> {
     func T() -> Array<[Double]> {
         let nrows = self.count
@@ -44,15 +31,13 @@ extension Array<[Double]> {
     }
 }
 
-
+// Matrix multiplication
 extension Array<[Double]> {
     static func *(lhs: Array<[Double]>, rhs: Array<[Double]>) -> Array<[Double]>? {
         let ncols1 = lhs[0].count
         let nrows1 = lhs.count
         let ncols2 = rhs[0].count
         let nrows2 = rhs.count
-        
-        //var tmp: Double
         
         var newArray = [[Double]]()
         for _ in 0..<nrows1 {
@@ -61,11 +46,9 @@ extension Array<[Double]> {
         
         if ncols1 == nrows2 {
             for n in 0..<nrows1 {
-                //tmp = 0.0
                 for p in 0..<ncols2 {
                     newArray[n][p] = lhs[n] * rhs.T()[p]
                 }
-                //newArray[n].append(tmp)
             }
             return newArray
         } else {
@@ -91,8 +74,7 @@ let b = [
     [5.0, 3.0, 9.0, 2.0, 4.0]
 ]
 
+print(a[0] * a[1])
+
 let c = a * b
-
 print(c ?? [[0.0]])
-
-//print(newArray.T())
