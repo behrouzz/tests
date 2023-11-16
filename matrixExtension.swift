@@ -1,6 +1,13 @@
-import Cocoa
+//
+//  MatrixModul.swift
+//  TestMatrix
+//
+//  Created by Behrouz Safari on 16/11/2023.
+//
 
-// dot produc of two vectors
+import Foundation
+
+// Dot produc of two vectors
 extension Array<Double> {
     static func *(lhs: Array<Double>, rhs: Array<Double>) -> Double {
         var n = 0.0
@@ -11,15 +18,29 @@ extension Array<Double> {
     }
 }
 
-// Trabspose of a matrix
+
 extension Array<[Double]> {
-    func T() -> Array<[Double]> {
+    
+    // Zero matrix
+    static func zeroMatrix(_ nrows: Int, _ ncols: Int) -> Array<[Double]> {
+        var newArray = [[Double]]()
+        for _ in 0..<nrows {
+            newArray.append([Double](repeating: 0.0, count: ncols))
+        }
+        return newArray
+    }
+    
+    // Shape of matrix
+    func shape() -> (nrows: Int, ncols: Int) {
         let nrows = self.count
         let ncols = self[0].count
-        var newArray = [[Double]]()
-        for _ in 0..<ncols {
-            newArray.append([Double](repeating: 0.0, count: nrows))
-        }
+        return (nrows, ncols)
+    }
+    
+    // Transpose of matrix
+    func T() -> Array<[Double]> {
+        let (nrows, ncols) = self.shape()
+        var newArray = [[Double]].zeroMatrix(ncols, nrows)
         
         for i in 0..<nrows {
             for j in 0..<ncols {
@@ -29,20 +50,12 @@ extension Array<[Double]> {
         
         return newArray
     }
-}
-
-// Matrix multiplication
-extension Array<[Double]> {
+    
+    // Matrix multiplication
     static func *(lhs: Array<[Double]>, rhs: Array<[Double]>) -> Array<[Double]>? {
-        let ncols1 = lhs[0].count
-        let nrows1 = lhs.count
-        let ncols2 = rhs[0].count
-        let nrows2 = rhs.count
-        
-        var newArray = [[Double]]()
-        for _ in 0..<nrows1 {
-            newArray.append([Double](repeating: 0.0, count: ncols2))
-        }
+        let (nrows1, ncols1) = lhs.shape()
+        let (nrows2, ncols2) = rhs.shape()
+        var newArray = [[Double]].zeroMatrix(nrows1, ncols2)
         
         if ncols1 == nrows2 {
             for n in 0..<nrows1 {
@@ -55,10 +68,49 @@ extension Array<[Double]> {
             return nil
         }
     }
+    
+    // Scalar multiply by matrix
+    static func *(lhs: Double, rhs: Array<[Double]>) -> Array<[Double]> {
+        let (nrows, ncols) = rhs.shape()
+        var newArray = [[Double]].zeroMatrix(nrows, ncols)
+        for i in 0..<nrows {
+            for j in 0..<ncols {
+                newArray[i][j] = lhs * rhs[i][j]
+            }
+        }
+        return newArray
+    }
+    
+    // Matrix multiply by scalar
+    static func *(lhs: Array<[Double]>, rhs: Double) -> Array<[Double]> {
+        let (nrows, ncols) = lhs.shape()
+        var newArray = [[Double]].zeroMatrix(nrows, ncols)
+        for i in 0..<nrows {
+            for j in 0..<ncols {
+                newArray[i][j] = rhs * lhs[i][j]
+            }
+        }
+        return newArray
+    }
+    
+    // Pretty print matrix
+    func pprint() {
+        for i in 0..<self.count {
+            if i == 0 {
+                print("[\(self[i]),")
+            } else if i == self.count - 1 {
+                print(" \(self[i])]")
+            } else {
+                print(" \(self[i]),")
+            }
+        }
+    }
+    
+    // more funcs to come
 }
 
 
-
+//-----------------------------------------------------------------
 
 let a = [
     [2.0, 5.0, 4.0],
@@ -78,3 +130,6 @@ print(a[0] * a[1])
 
 let c = a * b
 print(c ?? [[0.0]])
+
+let d = b * 3
+d.pprint()
